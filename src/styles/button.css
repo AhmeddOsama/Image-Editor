@@ -1,0 +1,26 @@
+/* styles.css */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: 2px solid #000000;
+    border-radius: 40px;
+    cursor: pointer;
+    margin: 5px;
+    width: 300px;
+    height: 50px;
+    background-color: white;
+
+}
+
+.black {
+    background-color: #000000;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.text-black {
+    color: #000000;
+}
