@@ -1,23 +1,25 @@
 // ImageSelector.js
 import React, { useState } from 'react';
 import '../styles/selectImage.css'
+import { useSelector, useDispatch } from 'react-redux';
+import { setImage, getImage } from '../redux/slices/imageSlice';
 
 const ImageSelector = () => {
-    const [selectedImage, setSelectedImage] = useState(null);
-    const onImageUpload = () => {
+    const selectedImage = useSelector(getImage);
+    const dispatch = useDispatch();
 
-    }
+
     const handleImageChange = (event) => {
         const file = event.target.files[0];
 
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setSelectedImage(reader.result);
+                dispatch(setImage(reader.result));
             };
 
             reader.readAsDataURL(file);
-            onImageUpload(file); // Pass the selected image to the parent component if needed
+            onImageUpload(file);
         }
     };
 

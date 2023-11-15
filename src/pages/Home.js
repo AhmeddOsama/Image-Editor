@@ -4,7 +4,12 @@ import React from 'react';
 import '../styles/button.css'; // Import the external CSS file
 import '../components/ImageSelector'
 import ImageSelector from '../components/ImageSelector';
+import { useDispatch } from 'react-redux';
+import { clearImage } from '../redux/slices/imageSlice';
+
 const Home = () => {
+    const dispatch = useDispatch();
+
     const handleHideSelectedArea = () => {
     };
 
@@ -17,31 +22,39 @@ const Home = () => {
     const handleDownload = () => {
     };
 
-    const renderButtons = () => {
+    const handleClear = () => {
+        dispatch(clearImage());
 
     }
+
     return <>
         <div>
-            <button className='button blue' style={{ marginLeft: 40, marginTop: 50 }} onClick={handleHideSelectedArea}>
+            <button className='button blue' style={{ marginTop: 50 }} onClick={handleHideSelectedArea}>
                 Show The Selected Block
             </button>
         </div>
 
         <div>
-            <button className='button black' style={{ marginLeft: 40, marginTop: 400 }} onClick={handleShowSelectedArea}>
+            <button className='button black' style={{ marginTop: 300 }} onClick={handleShowSelectedArea}>
                 Hide The Selected Area
             </button>
         </div>
         <div>
 
-            <button className='button text-black' style={{ marginLeft: 40, marginTop: 0 }} onClick={handleShowAll}>
+            <button className='button text-black' style={{ marginTop: 0 }} onClick={handleShowAll}>
                 Show All
             </button>
         </div>
 
         <div>
-            <button className='button blue' style={{ marginLeft: 40, marginTop: 0 }} onClick={handleDownload}>
+            <button className='button blue' style={{ marginTop: 0 }} onClick={handleDownload}>
                 Download
+            </button>
+        </div>
+
+        <div>
+            <button className='button black' style={{ marginTop: 0 }} onClick={handleClear}>
+                Clear
             </button>
         </div>
         <ImageSelector />
