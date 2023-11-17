@@ -5,21 +5,29 @@ import '../styles/button.css'; // Import the external CSS file
 import '../components/ImageSelector'
 import ImageSelector from '../components/ImageSelector';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearImage, getImage, getSelectedAreas } from '../redux/slices/imageSlice';
+import { clearImage, getImage, getSelectedAreas, getSelectedAreaNumber } from '../redux/slices/imageSlice';
 import myImage from '../assets/static.png';
 
 const Home = () => {
     const dispatch = useDispatch();
     const selectedImage = useSelector(getImage);
     const selectedAreas = useSelector(getSelectedAreas)
-
+    const selectedAreaNumber = useSelector(getSelectedAreaNumber)
     const handleHideSelectedArea = () => {
+        const divByKey = document.querySelector(`#area${selectedAreaNumber}`);
+        divByKey.setAttribute('hidden', 'true')
     };
 
     const handleShowSelectedArea = () => {
+        const divByKey = document.querySelector(`#area${selectedAreaNumber}`);
+        divByKey.removeAttribute('hidden')
     };
 
     const handleShowAll = () => {
+        selectedAreas.forEach((element, index) => {
+            const divByKey = document.querySelector(`#area${index + 1}`);
+            divByKey.removeAttribute('hidden')
+        });
     };
 
     const handleDownload = () => {
@@ -50,13 +58,13 @@ const Home = () => {
 
     return <>
         <div>
-            <button className='button blue' style={{ marginTop: 50 }} onClick={handleHideSelectedArea}>
+            <button className='button blue' style={{ marginTop: 50 }} onClick={handleShowSelectedArea}>
                 Show The Selected Block
             </button>
         </div>
 
         <div>
-            <button className='button black' style={{ marginTop: 300 }} onClick={handleShowSelectedArea}>
+            <button className='button black' style={{ marginTop: 300 }} onClick={handleHideSelectedArea}>
                 Hide The Selected Area
             </button>
         </div>

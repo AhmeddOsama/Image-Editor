@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     selectedImage: null,
-    selectedAreas: []
+    selectedAreas: [],
+    selectedAreaNumber: null
 };
 
 const imageSlice = createSlice({
@@ -19,14 +20,18 @@ const imageSlice = createSlice({
         clearImage: (state) => {
             state.selectedImage = null;
             state.selectedAreas = []
+            state.selectedAreaNumber = null
         },
+        setSelectedAreaNumber: (state, action) => {
+            state.selectedAreaNumber = action.payload
+        }
         // Add more actions as needed
     },
 });
 
-export const { setImage, clearImage, setSelectedAreas } = imageSlice.actions;
+export const { setImage, clearImage, setSelectedAreas, setSelectedAreaNumber } = imageSlice.actions;
 
 export const getImage = (state) => state.image.selectedImage;
 export const getSelectedAreas = (state) => state.image.selectedAreas
-
+export const getSelectedAreaNumber = (state) => state.image.selectedAreaNumber
 export default imageSlice.reducer;
