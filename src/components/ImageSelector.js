@@ -66,7 +66,7 @@ const ImageSelector = () => {
             <input type="file" accept="image/*" onChange={handleImageChange} />
             {selectedImage &&
                 <AreaSelector customAreaRenderer={customRender} areas={selectedAreas} onChange={handleAreaSelectionChange}>
-                    <img src={selectedImage} alt='Selected' style={{ maxWidth: '100%', marginTop: '10px' }} />
+                    <img src={selectedImage} alt='Selected' id='selectedImage' style={{ maxWidth: '100%', marginTop: '10px' }} />
                 </AreaSelector>}
         </div>
     );

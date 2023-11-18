@@ -14,12 +14,16 @@ const ButtonsPanel = () => {
     const selectedAreaNumber = useSelector(getSelectedAreaNumber)
     const handleHideSelectedArea = () => {
         const divByKey = document.querySelector(`#area${selectedAreaNumber}`);
-        divByKey.setAttribute('hidden', 'true')
+        if (divByKey) {
+            divByKey.setAttribute('hidden', 'true')
+        }
     };
 
     const handleShowSelectedArea = () => {
         const divByKey = document.querySelector(`#area${selectedAreaNumber}`);
-        divByKey.removeAttribute('hidden')
+        if (divByKey) {
+            divByKey.removeAttribute('hidden')
+        }
     };
 
     const handleShowAll = () => {
@@ -39,10 +43,15 @@ const ButtonsPanel = () => {
         image.onload = () => {
             canvas.width = image.width;
             canvas.height = image.height;
+            const container = document.getElementById('selectedImage');
+
+            const widthScale = container.clientWidth / image.naturalWidth;
+            const heightScale = container.clientHeight / image.naturalHeight;
+            console.log(image.width, container.clientWidth)
             context.drawImage(image, 0, 0);
             selectedAreas.forEach(area => {
                 context.fillStyle = 'white';
-                context.fillRect(area.x, area.y, area.width, area.height);
+                context.fillRect(area.x / widthScale, area.y / heightScale, area.width / widthScale, area.height / heightScale);
             });
 
             const exifData = piexif.load(selectedImage);
