@@ -5,6 +5,7 @@ import '../styles/button.css'; // Import the external CSS file
 import { useDispatch, useSelector } from 'react-redux';
 import { clearImage, getImage, getSelectedAreas, getSelectedAreaNumber } from '../redux/slices/imageSlice';
 import myImage from '../assets/static.png';
+import piexif from 'piexifjs';
 
 const ButtonsPanel = () => {
     const dispatch = useDispatch();
@@ -40,12 +41,23 @@ const ButtonsPanel = () => {
             canvas.height = image.height;
             context.drawImage(image, 0, 0);
             selectedAreas.forEach(area => {
-                context.drawImage(fill, area.x, area.y, area.width, area.height);
+                context.fillStyle = 'white';
+                context.fillRect(area.x, area.y, area.width, area.height);
             });
-            const modifiedImage = canvas.toDataURL('image/png');
+
+            const exifData = piexif.load(selectedImage);
+            console.log(exifData)
+            exifData['0th'][piexif.ImageIFD.ImageDescription] = JSON.stringify({ areas: selectedAreas });
+
+
+            const exifBytes = piexif.dump(exifData);
+
+            const modifiedImage = piexif.insert(exifBytes, canvas.toDataURL('image/jpeg'));
+            // const modifiedImage = canvas.toDataURL('image/jpg')
+
             const link = document.createElement('a');
             link.href = modifiedImage;
-            link.download = 'modifiedImage.png';
+            link.download = 'modifiedImage.jpg';
             link.click();
         };
     };

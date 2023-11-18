@@ -5,11 +5,32 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setImage, getImage, setSelectedAreas, getSelectedAreas, setSelectedAreaNumber } from '../redux/slices/imageSlice';
 import { AreaSelector } from '@bmunozg/react-image-area';
 import myImage from '../assets/static.png';
+import EXIF from 'exif-js'
 const ImageSelector = () => {
     const selectedImage = useSelector(getImage);
     const selectedAreas = useSelector(getSelectedAreas)
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (selectedImage) {
+            const image = new Image();
+            image.src = selectedImage
+            image.onload = function () {
+                EXIF.getData(image, function () {
+                    var metaData = EXIF.getAllTags(this);
+                    console.log(JSON.stringify(metaData, null, "\t"));
+                    // Access the description tag
+                    if ((metaData.ImageDescription)) {
+                        var description = JSON.parse(metaData.ImageDescription)
+                        dispatch(setSelectedAreas(description['areas']));
+                    }
+
+
+
+                });
+            };
+        }
+    }, [selectedImage])
     const handleAreaSelectionChange = (areas) => {
         dispatch(setSelectedAreas(areas))
     };
@@ -20,7 +41,7 @@ const ImageSelector = () => {
         if (!areaProps.isChanging) {
             return (
                 <div onClick={() => selectArea(areaProps.areaNumber)} id={`area${areaProps.areaNumber}`}>
-                    <img src={myImage} alt='Selected' style={{ maxWidth: '100%', marginTop: '10px' }} />
+                    <img src={myImage} alt='Fill' style={{ maxWidth: '100%', marginTop: '10px' }} />
                 </div>
             );
         }
@@ -38,6 +59,7 @@ const ImageSelector = () => {
             reader.readAsDataURL(file);
         }
     };
+
 
     return (
         <div className='image-selector-container '>
