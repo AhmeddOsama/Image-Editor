@@ -4,7 +4,7 @@ import '../styles/selectImage.css'
 import { useSelector, useDispatch } from 'react-redux';
 import { setImage, getImage, setSelectedAreas, getSelectedAreas, setSelectedAreaNumber } from '../redux/slices/imageSlice';
 import { AreaSelector } from '@bmunozg/react-image-area';
-import myImage from '../assets/static.png';
+import myImage from '../assets/Solid_black.png';
 import EXIF from 'exif-js'
 import piexif from 'piexifjs';
 

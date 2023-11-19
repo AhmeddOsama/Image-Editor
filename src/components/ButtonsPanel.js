@@ -4,7 +4,7 @@ import React from 'react';
 import '../styles/button.css'; // Import the external CSS file
 import { useDispatch, useSelector } from 'react-redux';
 import { clearImage, getImage, getSelectedAreas, getSelectedAreaNumber } from '../redux/slices/imageSlice';
-import myImage from '../assets/static.png';
+import myImage from '../assets/Solid_black.png';
 import piexif from 'piexifjs';
 import pako from 'pako';
 
