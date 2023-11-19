@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearImage, getImage, getSelectedAreas, getSelectedAreaNumber } from '../redux/slices/imageSlice';
 import myImage from '../assets/static.png';
 import piexif from 'piexifjs';
+import pako from 'pako';
+
 
 const ButtonsPanel = () => {
     const dispatch = useDispatch();
@@ -40,6 +42,9 @@ const ButtonsPanel = () => {
         const fill = new Image()
         fill.src = myImage
         image.src = selectedImage;
+        var dataBuffers = [];
+        const exifData = piexif.load(selectedImage);
+
         image.onload = () => {
             canvas.width = image.width;
             canvas.height = image.height;
@@ -49,15 +54,24 @@ const ButtonsPanel = () => {
             const heightScale = container.clientHeight / image.naturalHeight;
             console.log(image.width, container.clientWidth)
             context.drawImage(image, 0, 0);
+            var modifiedData = []
             selectedAreas.forEach(area => {
-                context.fillStyle = 'white';
-                context.fillRect(area.x / widthScale, area.y / heightScale, area.width / widthScale, area.height / heightScale);
+                const imageData = context.getImageData(area.x / widthScale, area.y / heightScale, area.width / widthScale, area.height / heightScale);
+                const data = imageData.data;
+                const buffer = data.buffer
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = 0;
+                    data[i + 1] = 0;
+                    data[i + 2] = 0;
+                }
+
+                modifiedData.push({ selectedArea: area, originalBuffer: data.buffer })
+
+                context.putImageData(imageData, area.x / widthScale, area.y / heightScale);
+
             });
-
-            const exifData = piexif.load(selectedImage);
-            console.log(exifData)
-            exifData['0th'][piexif.ImageIFD.ImageDescription] = JSON.stringify({ areas: selectedAreas });
-
+            var toJson = JSON.stringify({ data: modifiedData });
+            exifData['0th'][piexif.ImageIFD.ImageDescription] = toJson
 
             const exifBytes = piexif.dump(exifData);
 

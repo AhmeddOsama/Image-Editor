@@ -6,6 +6,8 @@ import { setImage, getImage, setSelectedAreas, getSelectedAreas, setSelectedArea
 import { AreaSelector } from '@bmunozg/react-image-area';
 import myImage from '../assets/static.png';
 import EXIF from 'exif-js'
+import piexif from 'piexifjs';
+
 const ImageSelector = () => {
     const selectedImage = useSelector(getImage);
     const selectedAreas = useSelector(getSelectedAreas)
@@ -16,18 +18,21 @@ const ImageSelector = () => {
             const image = new Image();
             image.src = selectedImage
             image.onload = function () {
-                EXIF.getData(image, function () {
-                    var metaData = EXIF.getAllTags(this);
-                    console.log(JSON.stringify(metaData, null, "\t"));
-                    // Access the description tag
-                    if ((metaData.ImageDescription)) {
-                        var description = JSON.parse(metaData.ImageDescription)
-                        dispatch(setSelectedAreas(description['areas']));
+
+                const modifiedImageData = piexif.load(selectedImage);
+                const imageDescriptionField = modifiedImageData['0th'][piexif.ImageIFD.ImageDescription];
+                const data = JSON.parse(imageDescriptionField)['data']
+                if (data) {
+                    var importedAreas = []
+                    for (var areaData of data) {
+                        importedAreas.push(areaData.area)
                     }
+                    dispatch(setSelectedAreas(importedAreas))
+                }
+                //After retrieving the selectedAreas , the original pixel values should be restored to the original values 
+                //leaving only the filled image until the user modifies the image and downloads it with new metadata . but the issue here was that the databuffer turns to an
+                //empty object after converting it to json string .
 
-
-
-                });
             };
         }
     }, [selectedImage])
@@ -41,7 +46,12 @@ const ImageSelector = () => {
         if (!areaProps.isChanging) {
             return (
                 <div onClick={() => selectArea(areaProps.areaNumber)} id={`area${areaProps.areaNumber}`}>
-                    <img src={myImage} alt='Fill' style={{ maxWidth: '100%', marginTop: '10px' }} />
+                    <img src={myImage} alt='Fill' style={{
+                        left: `${areaProps.x}px`,
+                        top: `${areaProps.y}px`,
+                        width: `${areaProps.width}px`,
+                        height: `${areaProps.height}px`,
+                    }} />
                 </div>
             );
         }
