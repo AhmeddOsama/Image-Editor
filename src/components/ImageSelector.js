@@ -23,9 +23,10 @@ const ImageSelector = () => {
                 const imageDescriptionField = modifiedImageData['0th'][piexif.ImageIFD.ImageDescription];
                 const data = JSON.parse(imageDescriptionField)['data']
                 if (data) {
+                    console.log(imageDescriptionField)
                     var importedAreas = []
                     for (var areaData of data) {
-                        importedAreas.push(areaData.area)
+                        importedAreas.push(areaData.selectedArea)
                     }
                     dispatch(setSelectedAreas(importedAreas))
                 }

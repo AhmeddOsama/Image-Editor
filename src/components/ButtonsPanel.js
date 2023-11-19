@@ -52,7 +52,6 @@ const ButtonsPanel = () => {
 
             const widthScale = container.clientWidth / image.naturalWidth;
             const heightScale = container.clientHeight / image.naturalHeight;
-            console.log(image.width, container.clientWidth)
             context.drawImage(image, 0, 0);
             var modifiedData = []
             selectedAreas.forEach(area => {
